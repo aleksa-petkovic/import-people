@@ -26,6 +26,7 @@ class ServiceProvider extends BaseServiceProvider
     public function boot()
     {
         $this->registerAuthRoutes($this->app['router']);
+        $this->registerApiAuthRoutes($this->app['router']);
     }
 
 
@@ -44,10 +45,10 @@ class ServiceProvider extends BaseServiceProvider
         ];
 
         $router->group($attributes, static function (RegistrarContract $router): void {
-            $router->get('login', 'Controller@index');
-            $router->post('login', 'Controller@login');
-            $router->get('register', 'Controller@registerForm');
-            $router->post('register', 'Controller@register');
+            $router->get('login', 'Auth\Controller@loginForm');
+            $router->post('login', 'Auth\Controller@login');
+            $router->get('register', 'Auth\Controller@registerForm');
+            $router->post('register', 'Auth\Controller@register');
 
         });
 
@@ -57,7 +58,30 @@ class ServiceProvider extends BaseServiceProvider
         ];
 
         $router->group($attributes, static function (RegistrarContract $router): void {
-            $router->post('logout', 'Controller@logout');
+            $router->post('logout', 'Auth\Controller@logout');
         });
     }
+
+    /**
+     * Registers api routes for the login and register.
+     *
+     * @param RegistrarContract $router A route registrar implementation.
+     *
+     * @return void
+     */
+    protected function registerApiAuthRoutes(RegistrarContract $router): void
+    {
+        $attributes = [
+            'prefix' => 'api/v1/',
+            'middleware' => ['api', 'guest'],
+            'namespace' => 'App\Auth\Http\Controllers\Api\V1\Auth',
+        ];
+
+        $router->group($attributes, static function (RegistrarContract $router): void {
+            $router->post('authenticate', 'Controller@authenticate');
+            $router->post('register', 'Controller@register');
+
+        });
+    }
+
 }

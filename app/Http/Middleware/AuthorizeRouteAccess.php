@@ -7,18 +7,13 @@ namespace App\Http\Middleware;
 use Cartalyst\Sentinel\Sentinel;
 use Closure;
 use Illuminate\Http\Request;
-use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 /**
- * Makes sure the user is authenticated.
- *
- * If they are, the request is passed on.
- *
- * Otherwise, the user will be redirected to the `/admin/login` path (this is
- * currently hard-coded), or throws an `UnauthorizedHttpException` in case of an
- * AJAX request.
+ * Checks if the user has permissions to access the current action, and throws
+ * an `AccessDeniedHttpException` if they don't.
  */
-class Authenticate
+class AuthorizeRouteAccess
 {
     /**
      * A Sentinel instance.
@@ -28,7 +23,7 @@ class Authenticate
     /**
      * Create a new middleware instance.
      *
-     * @param Sentinel    $sentinel    A Sentinel instance.
+     * @param Sentinel $sentinel A Sentinel instance.
      */
     public function __construct(Sentinel $sentinel)
     {
@@ -39,16 +34,18 @@ class Authenticate
      * Handle an incoming request.
      *
      * @param Request $request The incoming request.
-     * @param Closure $next    The next middleware.
+     * @param Closure $next    The next middleware to run.
      *
-     * @throws UnauthorizedHttpException
+     * @throws AccessDeniedHttpException
      *
      * @return mixed
      */
     public function handle(Request $request, Closure $next)
     {
-        if ($this->sentinel->guest()) {
-            return redirect()->guest('/login');
+        $route = $request->route();
+
+        if (!$this->sentinel->hasAccess($route->getActionName())) {
+            throw new AccessDeniedHttpException();
         }
 
         return $next($request);

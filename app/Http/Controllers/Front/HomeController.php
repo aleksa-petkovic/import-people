@@ -4,20 +4,18 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Front;
 
-use App\Auth\Http\Controllers\Front\Controller;
 use App\Http\Controllers\Controller as BaseController;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Facades\Redirect;
+use Illuminate\View\View;
 
 class HomeController extends BaseController
 {
     /**
      * Displays the website home page.
      *
-     * @return RedirectResponse
+     * @return View
      */
-    public function index(): RedirectResponse
+    public function index(): View
     {
-        return Redirect::action(Controller::class . '@index');
+        return view('welcome');
     }
 }
