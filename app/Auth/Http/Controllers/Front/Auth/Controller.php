@@ -2,24 +2,35 @@
 
 declare(strict_types=1);
 
-namespace App\Auth\Http\Controllers\Front;
+namespace App\Auth\Http\Controllers\Front\Auth;
 
+use App\Auth\Auth\WebAuthService;
+use App\Auth\Http\Requests\Front\RegisterRequest;
+use App\Auth\Auth\WebAuthService as LoginManager;
 use App\Http\Controllers\Controller as BaseController;
+use Cartalyst\Sentinel\Sentinel;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Redirect;
-use Illuminate\Support\Facades\URL;
 use Illuminate\View\View;
+
 
 class Controller extends BaseController
 {
     /**
      * Show login form
      *
-     * @return View
+     * @param Sentinel $sentinel A Sentinel instance.
+     *
+     * @return mixed
      */
-    public function index(): View
+    public function loginForm(Sentinel $sentinel)
     {
+        if ($sentinel->getUser()) {
+            return Redirect::action('App\Http\Controllers\Front\HomeController@index');
+        }
+
         return view('login');
     }
 
@@ -35,12 +46,10 @@ class Controller extends BaseController
     public function login(Request $request, LoginManager $loginManager): RedirectResponse
     {
         if ($loginManager->login($request->all())) {
-            $default = URL::action('App\Http\Controllers\Admin\HomeController@index');
-
-            return Redirect::intended($default);
+            return Redirect::action('App\Http\Controllers\Front\HomeController@index');
         }
 
-        return Redirect::action('App\Http\Controllers\Admin\LoginController@index')
+        return Redirect::action('App\Auth\Http\Controllers\Front\Auth\Controller@loginForm')
             ->withErrors($loginManager->getErrors())
             ->withInput();
     }
@@ -67,5 +76,29 @@ class Controller extends BaseController
     public function registerForm(): view
     {
         return view('register');
+    }
+
+    /**
+     * Create and activate new user with member role.
+     *
+     * @param RegisterRequest $request  A RegisterRequest instance.
+     * @param WebAuthService  $webAuthService A WebAuthService instance.
+     *
+     * @return RedirectResponse
+     */
+    public function register(RegisterRequest $request, WebAuthService $webAuthService): RedirectResponse
+    {
+        $inputData = $request->all();
+
+        $userConfig = [
+            'email' => Arr::get($inputData, 'email', ''),
+            'password' => Arr::get($inputData, 'password'),
+            'first_name' => Arr::get($inputData, 'first_name', ''),
+            'last_name' => Arr::get($inputData, 'last_name', ''),
+        ];
+
+        $webAuthService->registerUser($userConfig);
+
+        return Redirect::action(self::class . '@loginForm');
     }
 }

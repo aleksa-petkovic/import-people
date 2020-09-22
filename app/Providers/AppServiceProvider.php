@@ -39,7 +39,7 @@ class AppServiceProvider extends BaseServiceProvider
     {
         // Website homepage route.
         $attributes = [
-            'middleware' => ['web'],
+            'middleware' => ['web', 'auth'],
             'namespace' => 'App\Http\Controllers\Front',
         ];
 
