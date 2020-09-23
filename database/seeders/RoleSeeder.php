@@ -13,17 +13,18 @@ class RoleSeeder extends Seeder
     /**
      * A Sentinel instance.
      */
-    protected Sentinel $sentinel;
+    private Sentinel $sentinel;
 
     /**
      * Role configuration.
      */
-    protected array $roles = [
+    private array $roles = [
         [
             'name' => 'Admin',
             'slug' => 'admin',
             'permissions' => [
                 'App\Http\Controllers\Admin\HomeController@index' => true,
+                'App\People\Http\Controllers\Admin\People\Controller@importPeople' => true,
             ],
         ],
         [
@@ -66,7 +67,7 @@ class RoleSeeder extends Seeder
      *
      * @return void
      */
-    protected function createRole(array $roleConfig): void
+    private function createRole(array $roleConfig): void
     {
         $this->sentinel->getRoleRepository()->createModel()->create($roleConfig);
     }
@@ -79,7 +80,7 @@ class RoleSeeder extends Seeder
      *
      * @return void
      */
-    protected function updateRole(EloquentRole $role, array $roleConfig): void
+    private function updateRole(EloquentRole $role, array $roleConfig): void
     {
         $role->name = $roleConfig['name'];
         $role->permissions = $roleConfig['permissions'];

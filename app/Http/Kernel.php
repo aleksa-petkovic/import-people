@@ -4,6 +4,7 @@ namespace App\Http;
 
 use App\Http\Middleware\AuthorizeRouteAccess;
 use App\Http\Middleware\EncryptCookies;
+use App\Http\Middleware\LoginApiUser;
 use App\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
@@ -51,7 +52,8 @@ class Kernel extends HttpKernel
         ],
 
         'api' => [
-             SubstituteBindings::class,
+            LoginApiUser::class,
+            SubstituteBindings::class,
         ],
     ];
 

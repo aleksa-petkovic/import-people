@@ -13,12 +13,12 @@ class UserSeeder extends Seeder
     /**
      * A Sentinel instance.
      */
-    protected Sentinel $sentinel;
+    private Sentinel $sentinel;
 
     /**
      * Users to seed.
      */
-    protected array $users = [
+    private array $users = [
         [
             'email' => 'admin@admin.com',
             'password' => 'admin',
@@ -57,7 +57,7 @@ class UserSeeder extends Seeder
      *
      * @return bool
      */
-    protected function userExists(string $email): bool
+    private function userExists(string $email): bool
     {
         return User::whereEmail($email)->exists();
     }
@@ -70,7 +70,7 @@ class UserSeeder extends Seeder
      *
      * @return void
      */
-    protected function createUser(array $userConfig): void
+    private function createUser(array $userConfig): void
     {
         $roles = $userConfig['roles'];
 
@@ -91,7 +91,7 @@ class UserSeeder extends Seeder
      *
      * @return void
      */
-    protected function attachToRole(User $user, string $roleSlug): void
+    private function attachToRole(User $user, string $roleSlug): void
     {
         $role = $this->sentinel->findRoleBySlug($roleSlug);
         $role->users()->attach($user);

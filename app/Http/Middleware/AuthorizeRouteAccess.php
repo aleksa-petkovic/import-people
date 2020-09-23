@@ -18,7 +18,7 @@ class AuthorizeRouteAccess
     /**
      * A Sentinel instance.
      */
-    protected Sentinel $sentinel;
+    private Sentinel $sentinel;
 
     /**
      * Create a new middleware instance.

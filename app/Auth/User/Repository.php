@@ -17,12 +17,12 @@ class Repository
     /**
      * A User model instance.
      */
-    protected User $userModel;
+    private User $userModel;
 
     /**
      * A Sentinel instance.
      */
-    protected Sentinel $sentinel;
+    private Sentinel $sentinel;
 
     /**
      * @param User     $userModel A user model instance.
@@ -35,47 +35,15 @@ class Repository
     }
 
     /**
-     * Gets all users.
+     * Try to find the user by auth token
      *
-     * @return Collection
-     */
-    public function getAll(): Collection
-    {
-        return $this->userModel->all();
-    }
-
-    /**
-     * Gets a user by email.
-     *
-     * @param string $email The email address.
+     * @param string $token
      *
      * @return User|null
      */
-    public function findByEmail(string $email): ?User
+    public function findByAuthToken(string $token): ?User
     {
-        return $this->userModel->where('email', $email)->get()->first();
-    }
-
-    /**
-     * Finds the user by ID, or throws an exception if the ID doesn't exist.
-     *
-     * @param int $id The user's ID.
-     *
-     * @return User
-     */
-    public function findOrFail(int $id): User
-    {
-        return $this->userModel->findOrFail($id);
-    }
-
-    /**
-     * Returns all users that have no roles.
-     *
-     * @return Collection
-     */
-    public function getUsersWithoutRoles(): Collection
-    {
-        return $this->userModel->withoutRoles()->get();
+        return $this->userModel->where('auth_token', $token)->first();
     }
 
     /**
@@ -109,7 +77,7 @@ class Repository
      *
      * @return string
      */
-    protected function generateAuthToken(): string
+    private function generateAuthToken(): string
     {
         return bin2hex(openssl_random_pseudo_bytes(64));
     }
@@ -121,7 +89,7 @@ class Repository
      *
      * @return bool
      */
-    protected function updateAuthToken(User $user): bool
+    private function updateAuthToken(User $user): bool
     {
         $user->auth_token = $this->generateAuthToken();
         $user->auth_token_updated_at = Carbon::now();

@@ -14,6 +14,7 @@ return [
             'default' => 'Login',
             'loading' => 'Logging in...',
         ],
+        'registerButton' => 'Register',
     ],
 
     'placeholders' => [
