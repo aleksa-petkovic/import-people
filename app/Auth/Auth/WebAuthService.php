@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Auth\Auth;
 
-use App\Auth\Auth\AbstractAuthService;
 use App\Auth\Role\Roles;
 use App\Auth\User;
 use Cartalyst\Sentinel\Checkpoints\NotActivatedException;
@@ -18,18 +17,17 @@ class WebAuthService extends AbstractAuthService
     /**
      * A Sentinel instance.
      */
-    protected Sentinel $sentinel;
+    private Sentinel $sentinel;
 
     /**
      * A Translator instance.
      */
-    protected Translator $translator;
+    private Translator $translator;
 
     /**
      * A Session store instance.
      */
-    protected Session $session;
-
+    private Session $session;
 
     /**
      * @param Sentinel       $sentinel       A Sentinel instance.

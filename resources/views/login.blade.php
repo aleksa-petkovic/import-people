@@ -62,6 +62,7 @@ $url = URL::action('App\Auth\Http\Controllers\Front\Auth\Controller@login');
                     ]
                 )
             !!}
+            <a href="{{ URL::to('/register') }}" class="btn btn-lg btn-info">{{trans('login.labels.registerButton')}} </a>
         </div>
 
         {!! Form::close() !!}

@@ -6,7 +6,6 @@ namespace App\Auth\Http\Controllers\Front\Auth;
 
 use App\Auth\Auth\WebAuthService;
 use App\Auth\Http\Requests\Front\RegisterRequest;
-use App\Auth\Auth\WebAuthService as LoginManager;
 use App\Http\Controllers\Controller as BaseController;
 use Cartalyst\Sentinel\Sentinel;
 use Illuminate\Http\RedirectResponse;
@@ -38,34 +37,34 @@ class Controller extends BaseController
      * Attempts to log the user in, and redirects them to the admin panel home
      * page if successful, or back to the login form otherwise.
      *
-     * @param Request      $request      The current request instance.
-     * @param LoginManager $loginManager A LoginManager instance.
+     * @param Request        $request        The current request instance.
+     * @param WebAuthService $webAuthService A WebAuthService instance.
      *
      * @return RedirectResponse
      */
-    public function login(Request $request, LoginManager $loginManager): RedirectResponse
+    public function login(Request $request, WebAuthService $webAuthService): RedirectResponse
     {
-        if ($loginManager->login($request->all())) {
+        if ($webAuthService->login($request->all())) {
             return Redirect::action('App\Http\Controllers\Front\HomeController@index');
         }
 
         return Redirect::action('App\Auth\Http\Controllers\Front\Auth\Controller@loginForm')
-            ->withErrors($loginManager->getErrors())
+            ->withErrors($webAuthService->getErrors())
             ->withInput();
     }
 
     /**
      * Logs the user out, and redirects them back to the login form.
      *
-     * @param LoginManager $loginManager A LoginManager instance.
+     * @param WebAuthService $webAuthService A WebAuthService instance.
      *
      * @return RedirectResponse
      */
-    public function logout(LoginManager $loginManager): RedirectResponse
+    public function logout(WebAuthService $webAuthService): RedirectResponse
     {
-        $loginManager->logout();
+        $webAuthService->logout();
 
-        return Redirect::action('App\Http\Controllers\Admin\LoginController@index')->with('loggedOut', true);
+        return Redirect::action('App\Auth\Http\Controllers\Front\Auth\Controller@loginForm');
     }
 
     /**

@@ -1,12 +1,13 @@
 <?php
 
-namespace App\Providers;
+declare(strict_types=1);
+
+namespace App\People\People;
 
 use Illuminate\Contracts\Routing\Registrar as RegistrarContract;
-use Illuminate\Routing\Router;
 use Illuminate\Support\ServiceProvider as BaseServiceProvider;
 
-class AppServiceProvider extends BaseServiceProvider
+class ServiceProvider extends BaseServiceProvider
 {
     /**
      * Register any application services.
@@ -24,32 +25,33 @@ class AppServiceProvider extends BaseServiceProvider
      */
     public function boot()
     {
-        $this->registerHomepageRoutes($this->app['router']);
+        $this->registerApiRoutes($this->app['router']);
         $this->registerAdminRoutes($this->app['router']);
     }
 
     /**
-     * Registers the home page route.
+     * Registers api routes for the login and register.
      *
      * @param RegistrarContract $router A route registrar implementation.
      *
      * @return void
      */
-    private function registerHomepageRoutes(RegistrarContract $router): void
+    private function registerApiRoutes(RegistrarContract $router): void
     {
-        // Website homepage route.
         $attributes = [
-            'middleware' => ['web', 'auth'],
-            'namespace' => 'App\Http\Controllers\Front',
+            'prefix' => 'api/v1/people',
+            'middleware' => ['api', 'auth'],
+            'namespace' => 'App\People\Http\Controllers\Api\V1\People',
         ];
 
         $router->group($attributes, static function (RegistrarContract $router): void {
-            $router->get('', 'HomeController@index');
+            $router->get('', 'Controller@importedPeople');
+
         });
     }
 
     /**
-     * Registers some basic admin panel routes.
+     * Registers admin routes..
      *
      * @param RegistrarContract $router A route registrar implementation.
      *
@@ -58,14 +60,13 @@ class AppServiceProvider extends BaseServiceProvider
     private function registerAdminRoutes(RegistrarContract $router): void
     {
         $attributes = [
-            'prefix' => 'admin',
+            'prefix' => 'admin/people',
             'middleware' => ['web', 'auth', 'permissions'],
-            'namespace' => 'App\Http\Controllers\Admin',
+            'namespace' => 'App\People\Http\Controllers\Admin\People',
         ];
 
         $router->group($attributes, static function (RegistrarContract $router): void {
-            // admin panel home page.
-            $router->get('', 'HomeController@index');;
+            $router->post('', 'Controller@importPeople');
         });
     }
 }

@@ -35,6 +35,18 @@ class ApiAuthService extends AbstractAuthService
     }
 
     /**
+     * Try to find a user by auth token.
+     *
+     * @param string $token A token.
+     *
+     * @return User|null
+     */
+    public function findUserWithAuthToken(string $token): ?User
+    {
+        return $this->userRepository->findByAuthToken($token);
+    }
+
+    /**
      * Registers a new user.
      *
      * @param string      $email        A user email.
@@ -78,6 +90,10 @@ class ApiAuthService extends AbstractAuthService
             'password' => $password,
         ]);
         $user = $this->sentinel->getUser();
+
+        if (!$user) {
+            throw new ModelNotFoundException('User not found');
+        }
 
         $this->userRepository->touch($user);
 

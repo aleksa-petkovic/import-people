@@ -13,8 +13,8 @@ return [
         'password' => 'Password',
         'confirmPassword' => 'Confirm Password',
         'send' => [
-            'default' => 'Login',
-            'loading' => 'Logging in...',
+            'default' => 'Register',
+            'loading' => 'Loading...',
         ],
     ],
 

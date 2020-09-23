@@ -23,7 +23,7 @@ class Authenticate
     /**
      * A Sentinel instance.
      */
-    protected Sentinel $sentinel;
+    private Sentinel $sentinel;
 
     /**
      * Create a new middleware instance.
@@ -48,6 +48,10 @@ class Authenticate
     public function handle(Request $request, Closure $next)
     {
         if ($this->sentinel->guest()) {
+            if ($request->expectsJson()) {
+                throw new UnauthorizedHttpException('token', 'Missing auth token');
+            }
+
             return redirect()->guest('/login');
         }
 

@@ -37,7 +37,7 @@ class ServiceProvider extends BaseServiceProvider
      *
      * @return void
      */
-    protected function registerAuthRoutes(RegistrarContract $router): void
+    private function registerAuthRoutes(RegistrarContract $router): void
     {
         $attributes = [
             'middleware' => ['web', 'guest'],
@@ -58,7 +58,7 @@ class ServiceProvider extends BaseServiceProvider
         ];
 
         $router->group($attributes, static function (RegistrarContract $router): void {
-            $router->post('logout', 'Auth\Controller@logout');
+            $router->get('logout', 'Auth\Controller@logout');
         });
     }
 
@@ -69,10 +69,10 @@ class ServiceProvider extends BaseServiceProvider
      *
      * @return void
      */
-    protected function registerApiAuthRoutes(RegistrarContract $router): void
+    private function registerApiAuthRoutes(RegistrarContract $router): void
     {
         $attributes = [
-            'prefix' => 'api/v1/',
+            'prefix' => 'api/v1',
             'middleware' => ['api', 'guest'],
             'namespace' => 'App\Auth\Http\Controllers\Api\V1\Auth',
         ];
@@ -80,7 +80,6 @@ class ServiceProvider extends BaseServiceProvider
         $router->group($attributes, static function (RegistrarContract $router): void {
             $router->post('authenticate', 'Controller@authenticate');
             $router->post('register', 'Controller@register');
-
         });
     }
 
