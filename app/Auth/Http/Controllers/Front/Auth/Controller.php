@@ -68,16 +68,6 @@ class Controller extends BaseController
     }
 
     /**
-     * Displays register form.
-     *
-     * @return View
-     */
-    public function registerForm(): view
-    {
-        return view('register');
-    }
-
-    /**
      * Create and activate new user with member role.
      *
      * @param RegisterRequest $request  A RegisterRequest instance.

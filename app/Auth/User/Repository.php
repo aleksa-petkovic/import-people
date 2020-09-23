@@ -7,9 +7,6 @@ namespace App\Auth\User;
 use App\Auth\User;
 use Carbon\Carbon;
 use Cartalyst\Sentinel\Sentinel;
-use Cartalyst\Sentinel\Users\EloquentUser;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Arr;
 
 class Repository

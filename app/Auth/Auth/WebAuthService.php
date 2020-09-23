@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Auth\Auth;
 
-use App\Auth\Auth\AbstractAuthService;
 use App\Auth\Role\Roles;
 use App\Auth\User;
 use Cartalyst\Sentinel\Checkpoints\NotActivatedException;
